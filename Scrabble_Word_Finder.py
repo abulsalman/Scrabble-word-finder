@@ -1,7 +1,7 @@
 from PyDictionary import PyDictionary
 import pandas as pd 
 from itertools import permutations, combinations
-
+import cv2
 
 letter_combinations_list=[]
 letter_permutations_list=[]
@@ -26,6 +26,7 @@ while True:
 
 #chnage this to 1 when you get the image processing to be able to get
 #the combination of existing letters 
+#also need to add blank tiles to everything
 n=2
 while n<=len(user_letters):
     combination=combinations(user_letters,n)
@@ -33,7 +34,7 @@ while n<=len(user_letters):
     n+=1
     
     
-
+print (letter_combinations_list)
 for lists in letter_combinations_list:
      for comb in lists:
          letters=''.join(comb)
@@ -48,10 +49,27 @@ for lists in letter_permutations_list:
     for perm in lists:
         words=''.join(perm)
         potential_words_list.append(words)
+        print(words)
 
 
 words_df=df_words[df_words[0].isin(potential_words_list)]
+words_list=words_df[0].tolist()
+words_list=sorted(words_list,key=len, reverse=True)
 print(words_df)
+print(words_list) 
+
+def words_score(list_of_words, tile_scores): 
+    Words_and_score={}   
+    for word in list_of_words:
+        score=0
+        for letter in word:
+            letter_score=tile_scores[letter]
+            score+=letter_score
+        Words_and_score[word]=score
+        print(f"Word: {word} Score: {score}")
+    print(Words_and_score)
+
+
 
 
 
@@ -59,10 +77,6 @@ print(words_df)
 #         print(f"{word} added to the list")
 
 # print(words_list)
-
-
-
-
 
 
 
@@ -125,6 +139,7 @@ tiles_score={
     "Z":10,
     "Blank":0}
 
+words_score(words_list, tiles_score)
 
 
 
